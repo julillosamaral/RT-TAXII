@@ -1,0 +1,21 @@
+<& /Elements/Header, Title => $title &>
+<& /Elements/Tabs &>
+
+<h2><&|/l, $session{'CurrentUser'}->Name &>Active tickets for [_1]</&></h2>
+<form method="post" action="Alta.html">
+<table width="100%" cellpadding="0" cellspacing="0" class="myday">
+<tr>
+<td rowspan="2"><span class="label"><&|/l&>STIX Message</&>:<br /></span><textarea name="AddContentStixMessage" rows="5"
+cols="60"></textarea></td></tr>
+</table>
+<& /Elements/Submit, Label => loc('Record all updates') ,  Reset => 1, ResetLabel => loc('Clear')&>
+</form>
+</html>
+<%INIT>
+my $title = loc("Alta de Informacion");
+
+if (my $content = $ARGS{'AddContentStixMessage'}){
+	RT->Logger->info('Hago la llamada a los web services de TAXII');
+
+}
+</%INIT>

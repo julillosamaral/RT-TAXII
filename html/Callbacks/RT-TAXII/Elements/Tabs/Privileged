@@ -1,0 +1,35 @@
+    <%init>
+    my $taxii = Menu()->child(
+        'taxii',
+        title => 'TAXII',
+        path  => '/RTTAXII/'
+    );
+    $taxii->child(
+        'altaInformacion',
+        title => 'Alta de Informacion',
+        path  => '/RTTAXII/Alta.html',
+    );
+    $taxii->child(
+        'suscrDataFeed',
+        title => 'Subscripcion a Data Feed',
+        path  => '/RTTAXII/SubscDF.html',
+    );
+    $taxii->child(
+        'envioInfo',
+        title => 'Envio de Informacion',
+        path  => '/RTTAXII/EnvioInfo.html',
+    );   
+    $taxii->child( 
+        'pollInfo',
+        title => 'Poll de Informacion',
+        path  => '/RTTAXII/PollInfo.html',
+    );   
+
+    #Retrieve the 'actions' page menu item
+    if (my $actions = PageMenu->child('actions')) {
+        $actions->child(
+            'newitem',
+            title => loc('New Action'), path => '/new/thing/here',
+        )
+    }
+    </%init>
