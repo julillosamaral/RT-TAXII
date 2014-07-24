@@ -1,64 +1,84 @@
+%
+% my $server_address1 = RT->Config->Get('server_address');
+% my $port1 = RT->Config->Get('port');
+% my $bind_service1 = RT->Config->Get('subscriptionsInbox_path');
+% my $binding_server1 = $server_address1 . ":" . $port1 . $bind_service1;
+
+% my $authorization1 = RT->Config->Get('authorization');
+
+% my $bind_browser1 = LWP::UserAgent->new;
+% my $req_bind1 = HTTP::Request->new(GET => $binding_server1);
+% $req_bind1->header('Authorization' => $authorization1);
+
+% my $resp_bind1 = $bind_browser1->request($req_bind1);
+
 <& /Elements/Header, Title => $title &>
 <& /Elements/Tabs &>
 
-<h2><&|/l, $session{'CurrentUser'}->Name &>Active tickets for [_1]</&></h2>
-<form method="post" action="Alta.html">
-<table width="100%" cellpadding="0" cellspacing="0" class="myday">
-% while ( my $Ticket = $Tickets->Next()) {
-% $i++;
-% my $class =  $i % 2  ? 'class="evenline"' : 'class="oddline"';
-<tr <%$class|n%>><td colspan="2"><h2><a
-href="<%RT->Config->Get('WebPath')%>/Ticket/Display.html?id=<%$Ticket->Id%>"><%$Ticket->Id%>:
-<%$Ticket->Subject%></a></h2></td></tr>
-<tr <%$class|n%>><td><span class="label"><&|/l&>Worked</&>:</span><input size="3" name="UpdateTimeWorked-<%$Ticket->Id%>" /> <&|/l&>minutes</&>
-</td>
-<td rowspan="2"><span class="label"><&|/l&>Comments</&>:<br /></span><textarea name="UpdateContent-<%$Ticket->Id%>" rows="5"
-cols="60"></textarea></td></tr>
-<tr <%$class|n%>>
-<td><span class="label"><&|/l&>Status</&>:</span> <& /Elements/SelectStatus, Name=> 'UpdateStatus-'.$Ticket->Id, TicketObj => $Ticket, 
-				  DefaultLabel => loc("[_1] (Unchanged)",loc($Ticket->Status())) &></td>
-                  </tr>
+<form method="post" action="EnvioInfo.html">
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr width="50%">
+<td rowspan="2"><span class="label"><&|/l&>Inbox Service</&>:<br /></span>
+	<select name="inbox_information" rows="5" cols="60">
+		<option value selected="selected">(no value)</option>
 
-% }
+% if ($resp_bind1->is_success){
+%        my $list_content1 = $resp_bind1->decoded_content;
+%        RT->Logger->info("La respuesta fue: $list_content1");
+%        my $decoded1 = decode_json($list_content1);
+%	 my @bind_content1 = @{ $decoded1->{'items'}};
+% 	 foreach my $item ( @bind_content1 ) {
+		<option value="<% $item->{'id'} %>"><% $item->{'data_feed_name'} . "-" . $item->{'address'} %></option>
+%	}
+%}		
+	</select>
+</td>
+</tr>
+<tr width="50%">
 </table>
 <& /Elements/Submit, Label => loc('Record all updates') ,  Reset => 1, ResetLabel => loc('Clear')&>
 </form>
 </html>
 <%INIT>
-my $title = loc("Alta de Informacion");
+use LWP::UserAgent;
+use HTTP::Request::Common qw{ POST };
+use JSON qw (decode_json);
+my $user = $session{'CurrentUser'}->Name;
 
-my $i = 0;
-my @results;
-foreach my $arg ( keys %ARGS ) {
-    next unless ( $arg =~ /^UpdateStatus-(\d*)$/ );
-    my $id     = $1;
-    my $ticket = LoadTicket($id);
-    next unless ( $ticket->id );
-    if ( my $content = $ARGS{'UpdateContent-'.$id} ) {
-        my ( $val, $msg ) = $ticket->Comment(
-            Content   => $content,
-            TimeTaken => $ARGS{ 'UpdateTimeWorked-' . $id }
-        );
-        push @results, loc( "Ticket [_1]: [_2]", $id, $msg );
-    } elsif ( my $worked = $ARGS{ 'UpdateTimeWorked-' . $id } ) {
-        my ( $val, $msg ) = $ticket->SetTimeWorked( $worked + $ticket->TimeWorked );
-            push @results, loc( "Ticket [_1]: [_2]", $id, $msg );
-    }
+RT->Logger->info($user); 
 
-    if ( my $status = $ARGS{ 'UpdateStatus-' . $id } ) {
-        if ( $status ne $ticket->Status ) {
-            my ( $val, $msg ) = $ticket->SetStatus($status);
-            push @results, loc( "Ticket [_1]: [_2]", $id, $msg );
+my $title = loc("Envio de Informacion");
 
-        }
-    }
+my $server_address = RT->Config->Get('server_address');
+my $port = RT->Config->Get('port');
+my $authorization = RT->Config->Get('authorization');	
+if (my $content = $ARGS{'inbox_information'})  {
+	RT->Logger->info('Hago la llamada a los web services de TAXII');
+	my $ua = LWP::UserAgent->new;
 
+	my $service = RT->Config->Get('envio_path');
+
+	RT->Logger->info("Los parametros de conexion son: $server_address $port $service");
+	my $server = $server_address . ":" . $port . $service;
+	$RT::Logger->info("Server endpoint: $server");
+	
+	my $inbox_id = $ARGS{'inbox_id'};
+	
+	my $req = POST($server, ['id' => $inbox_id ]);
+	$req->header('Authorization' => $authorization);
+	
+	my $resp = $ua->request($req);
+	if ($resp->is_success) {
+		RT::Logger->error("Success");
+    		my $message = $resp->decoded_content;
+    		RT::Logger->error("Message: $message");
+    		RT::Logger->info("Received reply: $message");
+	} else {
+    		my $code = $resp->code;
+    		my $message = $resp->message;
+    		RT::Logger->error("Error: $code $message");
+    		RT::Logger->info("HTTP POST error code: $resp->code");
+    		RT::Logger->info("HTTP POST error message: $resp->message");
+	}
 }
-
-my $Tickets = RT::Tickets->new($session{'CurrentUser'});
-$Tickets->LimitOwner(VALUE => $session{'CurrentUser'}->Id);
-$Tickets->LimitStatus( VALUE => $_ ) foreach RT::Queue->ActiveStatusArray;
-$Tickets->OrderBy ( FIELD => 'Priority', ORDER => 'DESC');
-
-
 </%INIT>

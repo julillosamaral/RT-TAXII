@@ -1,9 +1,9 @@
 %
 % my $server_address1 = RT->Config->Get('server_address');
 % my $port1 = RT->Config->Get('port');
-% my $bind_service1 = RT->Config->Get('cbinding_path');
+% my $bind_service1 = RT->Config->Get('get_feed_ms_path');
 % my $binding_server1 = $server_address1 . ":" . $port1 . $bind_service1;
-
+% RT->Logger->info("Se va a hacer la request a: $binding_server1");
 % my $authorization1 = RT->Config->Get('authorization');
 
 % my $bind_browser1 = LWP::UserAgent->new;
@@ -15,16 +15,12 @@
 <& /Elements/Header, Title => $title &>
 <& /Elements/Tabs &>
 
-<h2><&|/l, $session{'CurrentUser'}->Name &>Active tickets for [_1]</&></h2>
-<form method="post" action="SubscDF.html">
+<form method="post" action="SubscDF2.html">
 <table width="100%" cellpadding="0" cellspacing="0">
 <tr width="50%">
-<td rowspan="2"><span class="label"><&|/l&>Titulo</&>:<br /></span><input name="content_title"></input></td>
-<td rowspan="2"><span class="label"><&|/l&>Descripcion</&>:<br /></span><textarea name="description" rows="5" cols="60"></textarea></td>
 <td rowspan="2"><span class="label"><&|/l&>Tipo de contenido</&>:<br /></span>
-	<select name="content_binding" rows="5" cols="60">
+	<select name="organization" rows="5" cols="60">
 		<option value selected="selected">(no value)</option>
-
 % if ($resp_bind1->is_success){
 %        my $list_content1 = $resp_bind1->decoded_content;
 %        RT->Logger->info("La respuesta fue: $list_content1");
@@ -32,15 +28,13 @@
 %        my @bind_content1 = @{ $decoded1->{'results'} };
 %        RT->Logger->info("El contenido es: $decoded1");
 %        RT->Logger->info("@bind_content1");
-%		foreach my $f ( @bind_content1 ) {
-		<option value="<% $f->{'id'} %>"><% $f->{'title'} %></option>
-%		}
-%	}		
+%        foreach my $f ( @bind_content1 ) {
+		<option value="<% $f->{'id'} %>"><% $f->{'name'} . "-" . $f->{'feed_managment'} %></option>
+%               }
+%       }
 	</select>
 </td>
 </tr>
-<tr width="50%">
-<td rowspan="2"><span class="label"><&|/l&>STIX Message</&>:<br /></span><textarea name="content" rows="5" cols="60"></textarea></td></tr>
 </table>
 <& /Elements/Submit, Label => loc('Record all updates') ,  Reset => 1, ResetLabel => loc('Clear')&>
 </form>

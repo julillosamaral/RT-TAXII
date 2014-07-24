@@ -80,12 +80,100 @@ Set the TAXII server address.
 
 Set( $cbinding_path, '/contentBindingId/');
 
-=item C<$dataFeed_path>
+=item C<$remoteDataFeed_path>
 
 Set the TAXII server address.
 
 =cut
 
-Set( $dataFeed_path, '/dataFeed/');
+Set( $remoteDataFeed_path, '/remoteDataFeed/');
+
+=item C<$remoteDataFeedPollInformation_path>
+
+Set the TAXII server address.
+
+=cut
+
+Set( $remoteDataFeedPollInformation_path, '/remoteDataFeedPollInformation/');
+
+=item C<$remoteInbox_path>
+
+Set the TAXII server address.
+
+=cut
+
+Set( $subscriptionsInbox_path, '/rest_services/data_feed_subscriptions/');
+
+
+=item C<$reg_serv_taxii_path>
+
+Set the TAXII server address.
+
+=cut
+
+Set( $reg_serv_taxii_path, '/taxiiServices/');
+
+
+=item C<$get_feed_ms_path>
+
+Set the TAXII server address.
+
+=cut
+
+Set( $get_feed_ms_path, '/feedManagmentServices/');
+
+
+=item C<$get_remote_data_feeds_path>
+
+Set the TAXII server address.
+
+=cut
+
+Set( $get_remote_data_feeds_path, '/rest_services/obtener_data_feeds/');
+
+
+=item C<$subscribe_to_data_feed_path>
+
+Set the TAXII server address.
+
+=cut
+
+Set( $subscribe_to_data_feed_path, '/rest_services/subscripcion_data_feed/');
+
+
+=item C<$protocol_binding_path>
+
+Set the TAXII server address.
+
+=cut
+
+Set( $protocol_binding_path, '/protocolBindingId/');
+
+
+=item C<$content_binding_path>
+
+Set the TAXII server address.
+
+=cut
+
+Set( $content_binding_path, '/contentBindingId/');
+
+
+=item C<$message_binding_path>
+
+Set the TAXII server address.
+
+=cut
+
+Set( $message_binding_path, '/messageBindingId/');
+
+
+=item C<$obtener_df_path>
+
+Set the TAXII server address.
+
+=cut
+
+Set( $obtener_df_path, '/rest_services/registrar_remote_data_feeds/');
 
 1;

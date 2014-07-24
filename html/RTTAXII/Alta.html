@@ -1,21 +1,91 @@
+%
+% my $server_address1 = RT->Config->Get('server_address');
+% my $port1 = RT->Config->Get('port');
+% my $bind_service1 = RT->Config->Get('cbinding_path');
+% my $binding_server1 = $server_address1 . ":" . $port1 . $bind_service1;
+
+% my $authorization1 = RT->Config->Get('authorization');
+
+% my $bind_browser1 = LWP::UserAgent->new;
+% my $req_bind1 = HTTP::Request->new(GET => $binding_server1);
+% $req_bind1->header('Authorization' => $authorization1);
+
+% my $resp_bind1 = $bind_browser1->request($req_bind1);
+
 <& /Elements/Header, Title => $title &>
 <& /Elements/Tabs &>
 
-<h2><&|/l, $session{'CurrentUser'}->Name &>Active tickets for [_1]</&></h2>
-<form method="post" action="Alta.html">
-<table width="100%" cellpadding="0" cellspacing="0" class="myday">
-<tr>
-<td rowspan="2"><span class="label"><&|/l&>STIX Message</&>:<br /></span><textarea name="AddContentStixMessage" rows="5"
-cols="60"></textarea></td></tr>
+<form method="post" action="SubscDF.html">
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr width="50%">
+<td rowspan="2"><span class="label"><&|/l&>Titulo</&>:<br /></span><input name="content_title"></input></td>
+<td rowspan="2"><span class="label"><&|/l&>Descripcion</&>:<br /></span><textarea name="description" rows="5" cols="60"></textarea></td>
+<td rowspan="2"><span class="label"><&|/l&>Tipo de contenido</&>:<br /></span>
+	<select name="content_binding" rows="5" cols="60">
+		<option value selected="selected">(no value)</option>
+
+% if ($resp_bind1->is_success){
+%        my $list_content1 = $resp_bind1->decoded_content;
+%        RT->Logger->info("La respuesta fue: $list_content1");
+%        my $decoded1 = decode_json($list_content1);
+%        my @bind_content1 = @{ $decoded1->{'results'} };
+%        RT->Logger->info("El contenido es: $decoded1");
+%        RT->Logger->info("@bind_content1");
+%		foreach my $f ( @bind_content1 ) {
+		<option value="<% $f->{'id'} %>"><% $f->{'title'} %></option>
+%		}
+%	}		
+	</select>
+</td>
+</tr>
+<tr width="50%">
+<td rowspan="2"><span class="label"><&|/l&>STIX Message</&>:<br /></span><textarea name="content" rows="5" cols="60"></textarea></td></tr>
 </table>
 <& /Elements/Submit, Label => loc('Record all updates') ,  Reset => 1, ResetLabel => loc('Clear')&>
 </form>
 </html>
 <%INIT>
+use LWP::UserAgent;
+use HTTP::Request::Common qw{ POST };
+use JSON qw (decode_json);
+my $user = $session{'CurrentUser'}->Name;
+
+RT->Logger->info($user); 
+
 my $title = loc("Alta de Informacion");
 
-if (my $content = $ARGS{'AddContentStixMessage'}){
+my $server_address = RT->Config->Get('server_address');
+my $port = RT->Config->Get('port');
+my $authorization = RT->Config->Get('authorization');	
+if ((my $content = $ARGS{'content'}) && (my $content_binding = $ARGS{'content_binding'}))   {
 	RT->Logger->info('Hago la llamada a los web services de TAXII');
+	my $ua = LWP::UserAgent->new;
 
+	my $service = RT->Config->Get('alta_path');
+
+	RT->Logger->info("Los parametros de conexion son: $server_address $port $service");
+	my $server = $server_address . ":" . $port . $service;
+	$RT::Logger->info("Server endpoint: $server");
+	
+	my $description = $ARGS{'description'};
+	my $content_title = $ARGS{'content_title'};
+	my $ticket_id = 25;
+
+	my $req = POST($server, ['username' => $user, 'title' => $content_title, 'description' => $description, 'content_binding' => $content_binding, 'content' => $content, 'rt_id' => $ticket_id ]);
+	$req->header('Authorization' => $authorization);
+	
+	my $resp = $ua->request($req);
+	if ($resp->is_success) {
+		RT::Logger->error("Success");
+    		my $message = $resp->decoded_content;
+    		RT::Logger->error("Message: $message");
+    		RT::Logger->info("Received reply: $message");
+	} else {
+    		my $code = $resp->code;
+    		my $message = $resp->message;
+    		RT::Logger->error("Error: $code $message");
+    		RT::Logger->info("HTTP POST error code: $resp->code");
+    		RT::Logger->info("HTTP POST error message: $resp->message");
+	}
 }
 </%INIT>

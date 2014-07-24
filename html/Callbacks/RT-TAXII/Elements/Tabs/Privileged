@@ -25,6 +25,16 @@
         path  => '/RTTAXII/PollInfo.html',
     );   
 
+    $taxii->child( 
+        'regServTaxii',
+        title => 'Registro de Servicios TAXII',
+        path  => '/RTTAXII/RegServTaxii.html',
+    );   
+    $taxii->child( 
+        'ObtRemotDG',
+        title => 'Obtener data feeds remotos',
+        path  => '/RTTAXII/ObtRemotDF.html',
+    );   
     #Retrieve the 'actions' page menu item
     if (my $actions = PageMenu->child('actions')) {
         $actions->child(
