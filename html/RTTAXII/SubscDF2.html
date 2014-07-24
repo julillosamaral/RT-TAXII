@@ -1,0 +1,119 @@
+
+<& /Elements/Header, Title => $title &>
+<& /Elements/Tabs &>
+
+
+
+% if (my $organization = $ARGS{'organization'})   {
+%	my $server_address1 = RT->Config->Get('server_address');
+% 	my $port1 = RT->Config->Get('port');
+% 	my $bind_service1 = RT->Config->Get('get_remote_data_feeds_path');
+% 	my $binding_server1 = $server_address1 . ":" . $port1 . $bind_service1;
+
+% 	my $authorization1 = RT->Config->Get('authorization');
+
+% 	my $bind_browser1 = LWP::UserAgent->new;
+%	my $req_bind1 = POST($binding_server1, ['id' => $organization ]);
+% 	$req_bind1->header('Authorization' => $authorization1);
+% 	my $resp_bind1 = $bind_browser1->request($req_bind1);
+
+<form method="post" action="SubscDF2.html">
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr width="50%">
+<td rowspan="2"><span class="label"><&|/l&>Data Feed</&>:<br /></span>
+	<select name="data_feed" rows="5" cols="60">
+		<option value selected="selected">(no value)</option>
+
+% 	if ($resp_bind1->is_success){
+%       	my $list_content1 = $resp_bind1->decoded_content;
+%        	RT->Logger->info("La respuesta fue: $list_content1");
+%        	my $decoded1 = decode_json($list_content1);
+%        	RT->Logger->info("El contenido es: $decoded1");
+%		for my $item( @{ $decoded1->{items}} ) {
+%			RT->Logger->info("El f es: $item->{name} ");
+			<option value="<% $item->{name} %>"><% $item->{name} %></option>
+%		}
+	</select>
+	<input name="feed_id" type="hidden" value="<% $organization %>"/>
+	<input name="organization" type="hidden" value="<% $organization %>" />
+</td>
+
+<td rowspan="2"><span class="label"><&|/l&>Protocol Binding</&>:<br /></span>
+        <select name="protocol_binding" rows="5" cols="60">
+%       	foreach my $f ( @{$decoded1->{protocol_bindings}} ) {
+%               	RT->Logger->info("Itero con el contenido $f");
+                	<option value="<% $f->{'binding_id'} %>"><% $f->{'binding_id'} %></option>
+%       	}
+        </select>
+</td>
+
+<td rowspan="2"><span class="label"><&|/l&>Message Binding</&>:<br /></span>
+        <select name="message_binding" rows="5" cols="60">
+%       	foreach my $f ( @{$decoded1->{message_bindings}} ) {
+%               	RT->Logger->info("Itero con el contenido $f");
+                	<option value="<% $f->{'binding_id'} %>"><% $f->{'binding_id'} %></option>
+%       	}
+        </select>
+</td>
+
+<td rowspan="2"><span class="label"><&|/l&>Content Binding</&>:<br /></span>
+        <select multiple name="content_binding" rows="5" cols="60">
+%       	foreach my $f ( @{$decoded1->{content_bindings}} ) {
+%               	RT->Logger->info("Itero con el contenido $f");
+                	<option value="<% $f->{'binding_id'} %>"><% $f->{'binding_id'} %></option>
+%       	}
+        </select>
+%	}
+</td>
+
+
+
+</tr>
+</table>
+<& /Elements/Submit, Label => loc('Record all updates') ,  Reset => 1, ResetLabel => loc('Clear')&>
+</form>
+</html>
+% }
+<%INIT>
+use LWP::UserAgent;
+use HTTP::Request::Common qw{ POST };
+use JSON qw (decode_json);
+
+my $title = loc("Subscripcion a Data Feeds");
+
+my $server_address = RT->Config->Get('server_address');
+my $port = RT->Config->Get('port');
+my $authorization = RT->Config->Get('authorization');	
+
+if (my $data_feed = $ARGS{'data_feed'}) {
+	RT->Logger->info('Hago la llamada a los web services de TAXII');
+	my $ua = LWP::UserAgent->new;
+	my $feed_id = $ARGS{'feed_id'};
+	my $service = RT->Config->Get('subscribe_to_data_feed_path');
+
+	RT->Logger->info("Los parametros de conexion son: $server_address $port $service");
+	my $server = $server_address . ":" . $port . $service;
+	$RT::Logger->info("Server endpoint: $server");
+
+	my $message_binding = $ARGS{'message_binding'};
+	my $content_binding = $ARGS{'content_binding'};
+	my $protocol_binding = $ARGS{'protocol_binding'};
+	
+	my $req = POST($server, ['data_feed' => $data_feed, 'id' => $feed_id, 'message_binding' => $message_binding, 'protocol_binding' => $protocol_binding, 'content_binding' => $content_binding]);
+	$req->header('Authorization' => $authorization);
+	
+	my $resp = $ua->request($req);
+	if ($resp->is_success) {
+		RT::Logger->error("Success");
+    		my $message = $resp->decoded_content;
+    		RT::Logger->error("Message: $message");
+    		RT::Logger->info("Received reply: $message");
+	} else {
+    		my $code = $resp->code;
+    		my $message = $resp->message;
+    		RT::Logger->error("Error: $code $message");
+    		RT::Logger->info("HTTP POST error code: $resp->code");
+    		RT::Logger->info("HTTP POST error message: $resp->message");
+	}
+}
+</%INIT>

@@ -1,0 +1,63 @@
+<& /Elements/Header, Title => $title &>
+<& /Elements/Tabs &>
+<form method="post" action="RegServTaxii.html">
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr width="50%">
+<td rowspan="2"><span class="label"><&|/l&>Nombre del servidor</&>:<br /></span><input name="name"></input></td>
+<td rowspan="2"><span class="label"><&|/l&>Descripcion</&>:<br /></span><textarea name="description" rows="5" cols="60"></textarea></td>
+<td rowspan="2"><span class="label"><&|/l&>Poll Service URL</&>:<br /></span><input name="poll_service"></input></td>
+<td rowspan="2"><span class="label"><&|/l&>Inbox Service URL</&>:<br /></span><input name="inbox_service"></input></td>
+<td rowspan="2"><span class="label"><&|/l&>Subscription Service URL</&>:<br /></span><input name="subscription_service"></input></td>
+<td rowspan="2"><span class="label"><&|/l&>Feed Managment Service URL</&>:<br /></span><input name="feed_managment_service"></input></td>
+</tr>
+</table>
+<& /Elements/Submit, Label => loc('Record all updates') ,  Reset => 1, ResetLabel => loc('Clear')&>
+</form>
+</html>
+<%INIT>
+use LWP::UserAgent;
+use HTTP::Request::Common qw{ POST };
+use JSON qw (decode_json);
+my $user = $session{'CurrentUser'}->Name;
+
+RT->Logger->info($user); 
+my $mensaje = "";
+my $title = loc("Registro de Servicios TAXII");
+
+my $server_address = RT->Config->Get('server_address');
+my $port = RT->Config->Get('port');
+my $authorization = RT->Config->Get('authorization');	
+if (my $name = $ARGS{'name'}) {
+	RT->Logger->info('Hago la llamada a los web services de TAXII');
+	my $ua = LWP::UserAgent->new;
+
+	my $service = RT->Config->Get('reg_serv_taxii_path');
+	
+	RT->Logger->info("Los parametros de conexion son: $server_address $port $service");
+	my $server = $server_address . ":" . $port . $service;
+	$RT::Logger->info("Server endpoint: $server");
+	
+	my $name = $ARGS{'name'};
+	my $description = $ARGS{'description'};
+	my $poll_service = $ARGS{'poll_service'};
+	my $inbox_service = $ARGS{'inbox_service'};
+	my $feed_managment_service = $ARGS{'feed_managment_service'};
+	my $subscription_service = $ARGS{'subscription_service'};
+
+	my $req = POST($server, ['name' => $name, 'description' => $description, 'poll' => $poll_service, 'inbox' => $inbox_service, 'subscription' => $subscription_service, 'feed_managment' => $feed_managment_service ]);
+	$req->header('Authorization' => $authorization);
+
+	my $resp = $ua->request($req);
+	if ($resp->is_success) {
+		RT::Logger->error("Success");
+    		my $message = $resp->decoded_content;
+    		RT::Logger->error("Message: $message");
+    		RT::Logger->info("Received reply: $message");
+		$mensaje = loc("El servicio se dio de alta correctamente");
+	} else {
+    		my $code = $resp->code;
+    		my $message = $resp->message;
+    		RT::Logger->error("Error: $code $message");
+	}
+}
+</%INIT>
