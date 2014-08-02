@@ -86,12 +86,12 @@ my $port = RT->Config->Get('port');
 my $authorization = RT->Config->Get('authorization');	
 
 if (my $data_feed = $ARGS{'data_feed'}) {
-	RT->Logger->info('Hago la llamada a los web services de TAXII');
+	RT->Logger->info('Make the TAXII web service call');
 	my $ua = LWP::UserAgent->new;
 	my $feed_id = $ARGS{'feed_id'};
 	my $service = RT->Config->Get('subscribe_to_data_feed_path');
 
-	RT->Logger->info("Los parametros de conexion son: $server_address $port $service");
+	RT->Logger->info("The connection parameters are: $server_address $port $service");
 	my $server = $server_address . ":" . $port . $service;
 	$RT::Logger->info("Server endpoint: $server");
 

@@ -53,12 +53,12 @@ my $server_address = RT->Config->Get('server_address');
 my $port = RT->Config->Get('port');
 my $authorization = RT->Config->Get('authorization');	
 if (my $content = $ARGS{'inbox_information'})  {
-	RT->Logger->info('Hago la llamada a los web services de TAXII');
+	RT->Logger->info('Make the TAXII web services call');
 	my $ua = LWP::UserAgent->new;
 
 	my $service = RT->Config->Get('envio_path');
 
-	RT->Logger->info("Los parametros de conexion son: $server_address $port $service");
+	RT->Logger->info("Connection parameters are: $server_address $port $service");
 	my $server = $server_address . ":" . $port . $service;
 	$RT::Logger->info("Server endpoint: $server");
 	
