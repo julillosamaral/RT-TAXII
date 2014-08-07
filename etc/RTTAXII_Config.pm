@@ -18,7 +18,7 @@ Set the TAXII server address.
 
 =cut
 
-Set( $server_address, 'http://192.168.0.103');
+Set( $server_address, 'http://172.16.59.219');
 
 =item C<$port>
 
@@ -26,7 +26,7 @@ Set the TAXII server address.
 
 =cut
 
-Set( $port, '8000');
+Set( $port, '8001');
 
 =item C<$poll_path>
 
@@ -69,7 +69,7 @@ Set the TAXII server address.
 
 =cut
 
-Set( $authorization, 'Basic anVsaWxsbzpzdGl4');
+Set( $authorization, 'Basic cm9vdDpwYXNzd29yZA==');
 
 
 =item C<$cbinding_path>
