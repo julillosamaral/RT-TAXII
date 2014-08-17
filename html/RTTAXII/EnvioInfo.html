@@ -16,11 +16,14 @@
 <& /Elements/Tabs &>
 
 <form method="post" action="EnvioInfo.html">
-<table width="100%" cellpadding="0" cellspacing="0">
-<tr width="50%">
-<td rowspan="2"><span class="label"><&|/l&>Inbox Service</&>:<br /></span>
-	<select name="inbox_information" rows="5" cols="60">
-		<option value selected="selected">(no value)</option>
+	<table width="100%" cellpadding="0" cellspacing="0">
+		<tr width="50%">
+			<td>
+				<span class="label"><&|/l&>Inbox Service</&>:<br /></span>
+			</td>
+			<td>
+				<select name="inbox_information" rows="5" cols="60">
+					<option value selected="selected">(no value)</option>
 
 % if ($resp_bind1->is_success){
 %        my $list_content1 = $resp_bind1->decoded_content;
@@ -31,12 +34,11 @@
 		<option value="<% $item->{'id'} %>"><% $item->{'data_feed_name'} . "-" . $item->{'address'} %></option>
 %	}
 %}		
-	</select>
-</td>
-</tr>
-<tr width="50%">
-</table>
-<& /Elements/Submit, Label => loc('Record all updates') ,  Reset => 1, ResetLabel => loc('Clear')&>
+				</select>
+			</td>
+		</tr>
+	</table>
+	<& /Elements/Submit, Label => loc('Record all updates') ,  Reset => 1, ResetLabel => loc('Clear')&>
 </form>
 </html>
 <%INIT>

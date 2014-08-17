@@ -1,0 +1,70 @@
+%
+% my $server_address1 = RT->Config->Get('server_address');
+% my $port1 = RT->Config->Get('port');
+% my $bind_service1 = RT->Config->Get('obtener_df_ctt_block');
+% my $binding_server1 = $server_address1 . ":" . $port1 . $bind_service1;
+% RT->Logger->info("Los datos con los que va a hacer la conexion son: $binding_server1");
+% my $authorization1 = RT->Config->Get('authorization');
+
+% my $bind_browser1 = LWP::UserAgent->new;
+% my $req_bind1 = HTTP::Request->new(GET => $binding_server1);
+% $req_bind1->header('Authorization' => $authorization1);
+
+% my $resp_bind1 = $bind_browser1->request($req_bind1);
+
+<& /Elements/Header, Title => $title &>
+<& /Elements/Tabs &>
+<div>
+test
+</div>
+
+<table width="60%">
+	<tr>
+		<th>Title</th>
+		<th>Description</th>
+		<th>Data Feed</th>
+		<th>Content</th>
+	</tr>
+
+% if ($resp_bind1->is_success){
+%        my $list_content1 = $resp_bind1->decoded_content;
+%        RT->Logger->info("La respuesta fue: $list_content1");
+%        my $decoded1 = decode_json($list_content1);
+%	 my @bind_content1 = @{ $decoded1->{'items'}};
+%        my $i = 0;
+% 	 foreach my $item ( @bind_content1 ) {
+%		my $content = $item->{'content'};
+%		$content =~ s/\r\n//g;
+%	 	$content =~ s/\n//g;
+	<script>
+		function popitup<% $i %>(){
+			newindow = window.open('', 'name', 'height=500,width=600');
+			var tmp = newindow.document;
+			tmp.write('<html><head><title>test</title>');
+			tmp.write('</head><body>');
+			tmp.write('<% $content %>');
+			tmp.write('</body></html>');
+			tmp.close();
+		};
+	</script>
+	<tr>
+		<td align="center"><% $item->{'title'} %></td>
+		<td align="center"><% $item->{'description'} %></td>
+		<td align="center"><% $item->{'data_feed'} %></td>
+		<td align="center"><a href="javascript:popitup<% $i %>()">View Content Blocks</a></td>
+	</tr>	
+%               $i = $i + 1;
+%	}
+%}		
+
+
+</table>
+
+</html>
+<%INIT>
+use LWP::UserAgent;
+use HTTP::Request::Common qw{ POST };
+use JSON qw (decode_json);
+my $title = loc("Listado de Informacion");
+
+</%INIT>

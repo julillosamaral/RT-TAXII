@@ -18,9 +18,12 @@
 <form method="post" action="PollInfo.html">
 <table width="100%" cellpadding="0" cellspacing="0">
 <tr width="50%">
-<td rowspan="2"><span class="label"><&|/l&>Data Feed y subscripcion</&>:<br /></span>
-	<select name="poll_information" rows="5" cols="60">
-		<option value selected="selected">(no value)</option>
+	<td>
+		<span class="label"><&|/l&>Data Feed y subscripcion</&>:<br /></span>
+	</td>
+	<td>	
+		<select name="poll_information" rows="5" cols="60">
+			<option value selected="selected">(no value)</option>
 % RT->Logger->info($resp_bind1->is_success);
 % if ($resp_bind1->is_success){
 %        my $list_content1 = $resp_bind1->decoded_content;
@@ -33,10 +36,9 @@
 		<option value="<% $f->{'id'} %>"><% $f->{'name'} %></option>
 %	}
 %}		
-	</select>
-</td>
+		</select>
+	</td>
 </tr>
-<tr width="50%">
 </table>
 <& /Elements/Submit, Label => loc('Record all updates') ,  Reset => 1, ResetLabel => loc('Clear')&>
 </form>

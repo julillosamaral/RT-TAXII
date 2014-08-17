@@ -18,11 +18,14 @@
 % 	my $resp_bind1 = $bind_browser1->request($req_bind1);
 
 <form method="post" action="SubscDF2.html">
-<table width="100%" cellpadding="0" cellspacing="0">
-<tr width="50%">
-<td rowspan="2"><span class="label"><&|/l&>Data Feed</&>:<br /></span>
-	<select name="data_feed" rows="5" cols="60">
-		<option value selected="selected">(no value)</option>
+	<table width="100%" cellpadding="0" cellspacing="0">
+		<tr width="50%">
+			<td>
+				<span class="label"><&|/l&>Data Feed</&>:<br /></span>
+			</td>
+			<td>
+				<select name="data_feed" rows="5" cols="60">
+					<option value selected="selected">(no value)</option>
 
 % 	if ($resp_bind1->is_success){
 %       	my $list_content1 = $resp_bind1->decoded_content;
@@ -33,40 +36,54 @@
 %			RT->Logger->info("El f es: $item->{name} ");
 			<option value="<% $item->{name} %>"><% $item->{name} %></option>
 %		}
-	</select>
-	<input name="feed_id" type="hidden" value="<% $organization %>"/>
-	<input name="organization" type="hidden" value="<% $organization %>" />
-</td>
-
-<td rowspan="2"><span class="label"><&|/l&>Protocol Binding</&>:<br /></span>
-        <select name="protocol_binding" rows="5" cols="60">
+				</select>
+		</tr>
+		<tr>
+			<td>
+				<input name="feed_id" type="hidden" value="<% $organization %>"/>
+			<td>
+			<td>
+				<input name="organization" type="hidden" value="<% $organization %>" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span class="label"><&|/l&>Protocol Binding</&>:<br /></span>
+			</td>
+			<td>
+       	 			<select name="protocol_binding" rows="5" cols="60">
 %       	foreach my $f ( @{$decoded1->{protocol_bindings}} ) {
 %               	RT->Logger->info("Itero con el contenido $f");
                 	<option value="<% $f->{'binding_id'} %>"><% $f->{'binding_id'} %></option>
 %       	}
-        </select>
-</td>
-
-<td rowspan="2"><span class="label"><&|/l&>Message Binding</&>:<br /></span>
-        <select name="message_binding" rows="5" cols="60">
+        		</select>
+			</td>
+		<tr>
+			<td>
+				<span class="label"><&|/l&>Message Binding</&>:<br /></span>
+			</td>
+			<td>
+        			<select name="message_binding" rows="5" cols="60">
 %       	foreach my $f ( @{$decoded1->{message_bindings}} ) {
 %               	RT->Logger->info("Itero con el contenido $f");
                 	<option value="<% $f->{'binding_id'} %>"><% $f->{'binding_id'} %></option>
 %       	}
-        </select>
-</td>
-
-<td rowspan="2"><span class="label"><&|/l&>Content Binding</&>:<br /></span>
-        <select multiple name="content_binding" rows="5" cols="60">
+        		</select>
+			</td>
+		<tr>
+		<tr>
+			<td>
+				<span class="label"><&|/l&>Content Binding</&>:<br /></span>
+			</td>
+			<td>
+        			<select multiple name="content_binding" rows="5" cols="60">
 %       	foreach my $f ( @{$decoded1->{content_bindings}} ) {
 %               	RT->Logger->info("Itero con el contenido $f");
                 	<option value="<% $f->{'binding_id'} %>"><% $f->{'binding_id'} %></option>
 %       	}
-        </select>
+        		</select>
 %	}
-</td>
-
-
+			</td>
 
 </tr>
 </table>

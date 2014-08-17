@@ -4,10 +4,20 @@
         title => 'TAXII',
         path  => '/RTTAXII/'
     );
-    $taxii->child(
+    my $info = $taxii->child(
+        'manejoInfo',
+        title => 'Informacion',
+        path => 'RTTAXII/',
+    );
+    $info->child(
         'altaInformacion',
         title => 'Alta de Informacion',
         path  => '/RTTAXII/Alta.html',
+    );
+    $info->child(
+        'lstInformacion',
+        title => 'Listado de Informacion',
+        path  => '/RTTAXII/ListadoInfo.html',
     );
     $taxii->child(
         'suscrDataFeed',
@@ -18,22 +28,56 @@
         'envioInfo',
         title => 'Envio de Informacion',
         path  => '/RTTAXII/EnvioInfo.html',
+    );
+    my $asc = $taxii->child(
+        'asocInfo',
+        title => 'Asociaciones',
+        path => 'RTTAXII/',
+    );
+    $asc->child(
+        'relInfo',
+        title => 'Relacionar Informacion',
+        path => '/RTTAXII/RelacInfo.html',
+    );  
+    $asc->child(
+        'lstInfo',
+        title => 'Listado Relaciones Informacion',
+        path => '/RTTAXII/LstRelacInfo.html',
     );   
     $taxii->child( 
         'pollInfo',
         title => 'Poll de Informacion',
         path  => '/RTTAXII/PollInfo.html',
     );   
-
-    $taxii->child( 
+    my $reg = $taxii->child( 
+        'ServTaxii',
+        title => 'Servicios TAXII',
+        path  => '/RTTAXII/',
+    );
+    $reg->child(
         'regServTaxii',
-        title => 'Registro de Servicios TAXII',
-        path  => '/RTTAXII/RegServTaxii.html',
-    );   
-    $taxii->child( 
+        'title' => 'Registro de Servicios TAXII',
+        'path' => '/RTTAXII/RegServTaxii.html',
+    );
+    $reg->child(
+        'lstServTaxii',
+        'title' => 'Listado de Servicios TAXII',
+        'path' => '/RTTAXII/LstServTaxii.html',
+    );
+    my $rdf = $taxii->child(
+        'RemoteDf',
+        'title' => 'Data Feeds Remotos',
+        'path' => '/RTTAXII/',
+    );
+    $rdf->child( 
         'ObtRemotDG',
         title => 'Obtener data feeds remotos',
         path  => '/RTTAXII/ObtRemotDF.html',
+    );
+    $rdf->child( 
+        'LstRemotDF',
+        title => 'Listar data feeds remotos',
+        path  => '/RTTAXII/LstRemotDF.html',
     );   
     #Retrieve the 'actions' page menu item
     if (my $actions = PageMenu->child('actions')) {

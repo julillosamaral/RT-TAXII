@@ -1,0 +1,122 @@
+%
+% my $server_address1 = RT->Config->Get('server_address');
+% my $port1 = RT->Config->Get('port');
+% my $bind_service1 = RT->Config->Get('contentBlock_path');
+% my $binding_server1 = $server_address1 . ":" . $port1 . $bind_service1;
+% RT->Logger->info("Los datos con los que va a hacer la conexion son: $binding_server1");
+% my $authorization1 = RT->Config->Get('authorization');
+
+% my $bind_browser1 = LWP::UserAgent->new;
+% my $req_bind1 = HTTP::Request->new(GET => $binding_server1);
+% $req_bind1->header('Authorization' => $authorization1);
+
+% my $resp_bind1 = $bind_browser1->request($req_bind1);
+
+<& /Elements/Header, Title => $title &>
+<& /Elements/Tabs &>
+
+<form method="post" action="RelacInfo.html">
+	<table>
+		<tr>
+			<td>
+				<span class="label"><&|/l&>Contenido en taxii</&>:<br /></span>
+			</td>
+			<td>
+	<select name="content_blocks" rows="5" cols="60">
+		<option value selected="selected">(no value)</option>
+
+% if ($resp_bind1->is_success){
+%        my $list_content1 = $resp_bind1->decoded_content;
+%        RT->Logger->info("La respuesta fue: $list_content1");
+%        my $decoded1 = decode_json($list_content1);
+%	 my @bind_content1 = @{ $decoded1->{'results'}};
+
+%        RT->Logger->info("@bind_content1");
+%	 foreach my $f ( @bind_content1 ) {
+%		RT->Logger->info("Itero con el contenido $f");
+		<option value="<% $f->{'id'} %>"><% $f->{'title'} %></option>
+%	}
+%}		
+	</select>
+			</td>
+% my $ua = LWP::UserAgent->new;
+
+% $authorization = RT->Config->Get('authorization');	
+% my $url = "http://172.16.59.219:8080/REST/1.0/search/ticket";
+% my $req = POST($url, [query => "Owner='root'", user => 'root', pass=> 'password', 'Content_Type' => 'form-data' ]);
+% my @final_array = ();
+% my $resp = $ua->request($req);
+		<tr>
+			<td>
+	<span class="label"><&|/l&>Contenido en RTIR</&>:<br /></span>
+			</td>
+			<td>
+	<select name="ticket">
+		<option value selected="selected">(no value)</option>
+% if ($resp->is_success) {
+% 	RT::Logger->error("Success");
+%	my $message = $resp->decoded_content;
+%	my @data = split('\n', $message);
+%	my $i = 0;
+%	foreach my $val (@data) {
+%		if (($val ne " ") and ($val ne "") and ($val ne "RT/4.0.21 200 Ok")){
+%			my @select = split(': ', $val);
+%			RT::Logger->error("Los datos son $select[0] $select[1]");
+		<option value="<% $select[0] %>"><% $select[1] %></option>
+%		}		
+%		$i = $i 
+%	}	
+%}
+	</select>
+		</td>
+	</table>
+<& /Elements/Submit, Label => loc('Record all updates') ,  Reset => 1, ResetLabel => loc('Clear')&>
+</form>		
+
+</html>
+<%INIT>
+use LWP::UserAgent;
+
+use RT::Tickets;
+use LWP::UserAgent;
+use HTTP::Request::Common qw{ POST };
+use JSON qw (decode_json);
+my $title = loc("Asociacion de Content Blocks y Tickets");
+
+my $server_address = RT->Config->Get('server_address');
+my $port = RT->Config->Get('port');
+my $bind_service = RT->Config->Get('contentBlock_path');
+my $binding_server = $server_address . ":" . $port . $bind_service;
+RT->Logger->info("Los datos con los que va a hacer la conexion son: $binding_server");
+my $authorization = RT->Config->Get('authorization');
+
+if ((my $ticket = $ARGS{'ticket'}) && (my $content_blocks = $ARGS{'content_blocks'}))  {
+
+	RT->Logger->info('Make the TAXII web service call');
+	my $ua = LWP::UserAgent->new;
+
+	my $service = RT->Config->Get('cbRT_path');
+
+	RT->Logger->info("The connection parameters are: $server_address $port $service");
+	my $server = $server_address . ":" . $port . $service;
+	$RT::Logger->info("Server endpoint: $server");
+	my $cb = $server_address . ":" . $port . "/contentBlock/" . $content_blocks . "/";
+	my $req = POST($server, ['rtir_id' => $ticket, 'content_block' => $cb]);
+	$req->header('Authorization' => $authorization);
+	
+	my $resp = $ua->request($req);
+	if ($resp->is_success) {
+		RT::Logger->error("Success");
+    		my $message = $resp->decoded_content;
+    		RT::Logger->error("Message: $message");
+    		RT::Logger->info("Received reply: $message");
+	} else {
+    		my $code = $resp->code;
+    		my $message = $resp->decoded_content;
+    		RT::Logger->error("Error: $code $message");
+    		RT::Logger->info("HTTP POST error code: $resp->code");
+    		RT::Logger->info("HTTP POST error message: message");
+	}
+}
+
+</%INIT>

@@ -3,12 +3,39 @@
 <form method="post" action="RegServTaxii.html">
 <table width="100%" cellpadding="0" cellspacing="0">
 <tr width="50%">
-<td rowspan="2"><span class="label"><&|/l&>Nombre del servidor</&>:<br /></span><input name="name"></input></td>
-<td rowspan="2"><span class="label"><&|/l&>Descripcion</&>:<br /></span><textarea name="description" rows="5" cols="60"></textarea></td>
-<td rowspan="2"><span class="label"><&|/l&>Poll Service URL</&>:<br /></span><input name="poll_service"></input></td>
-<td rowspan="2"><span class="label"><&|/l&>Inbox Service URL</&>:<br /></span><input name="inbox_service"></input></td>
-<td rowspan="2"><span class="label"><&|/l&>Subscription Service URL</&>:<br /></span><input name="subscription_service"></input></td>
-<td rowspan="2"><span class="label"><&|/l&>Feed Managment Service URL</&>:<br /></span><input name="feed_managment_service"></input></td>
+	<td>
+		<span class="label"><&|/l&>Nombre del servidor</&>:<br /></span>
+	</td>
+	<td>
+		<input name="name"></input>
+	</td>
+	<td>
+		<span class="label"><&|/l&>Descripcion</&>:<br /></span>
+	</td>
+		<textarea name="description" rows="5" cols="60"></textarea>
+	</td>
+	<td>
+		<span class="label"><&|/l&>Poll Service URL</&>:<br /></span>
+	</td>
+		<input name="poll_service"></input>
+	</td>
+	<td>
+		<span class="label"><&|/l&>Inbox Service URL</&>:<br /></span>
+	</td>
+	<td>
+		<input name="inbox_service"></input>
+	</td>
+	<td>
+		<span class="label"><&|/l&>Subscription Service URL</&>:<br /></span>
+	</td>
+	<td>
+		<input name="subscription_service"></input>
+	</td>
+	<td>
+		<span class="label"><&|/l&>Feed Managment Service URL</&>:<br /></span>
+	</td>
+		<input name="feed_managment_service"></input>
+	</td>
 </tr>
 </table>
 <& /Elements/Submit, Label => loc('Record all updates') ,  Reset => 1, ResetLabel => loc('Clear')&>

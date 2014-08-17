@@ -1,0 +1,82 @@
+%
+% my $server_address1 = RT->Config->Get('server_address');
+% my $port1 = RT->Config->Get('port');
+% my $bind_service1 = RT->Config->Get('cbRT_path');
+% my $binding_server1 = $server_address1 . ":" . $port1 . $bind_service1;
+% RT->Logger->info("Los datos con los que va a hacer la conexion son: $binding_server1");
+% my $authorization1 = RT->Config->Get('authorization');
+
+% my $bind_browser1 = LWP::UserAgent->new;
+% my $req_bind1 = HTTP::Request->new(GET => $binding_server1);
+% $req_bind1->header('Authorization' => $authorization1);
+
+% my $resp_bind1 = $bind_browser1->request($req_bind1);
+
+<& /Elements/Header, Title => $title &>
+<& /Elements/Tabs &>
+
+<table>
+	<tr>
+
+		<th>Id Ticket</th>
+		<th>Ticket</th>
+		<th>Id Content Block</th>
+		<th>Content Block</th>
+	</tr>
+
+
+% if ($resp_bind1->is_success){
+%        my $list_content1 = $resp_bind1->decoded_content;
+%        RT->Logger->info("La respuesta fue: $list_content1");
+%        my $decoded1 = decode_json($list_content1);
+%	 my @bind_content1 = @{ $decoded1->{'results'}};
+%        my $i = 0;
+% 	 foreach my $item ( @bind_content1 ) {
+%		my $content = $item->{'content'};
+
+% 		my $req_bindC = HTTP::Request->new(GET => $item->{'content_block'});
+% 		$req_bindC->header('Authorization' => $authorization1);
+% 		my $resp_bindC = $bind_browser1->request($req_bindC);
+% 		if ($resp_bindC->is_success){
+
+%	        	my $content = $resp_bindC->decoded_content;
+%	        	RT->Logger->info("La respuesta de contenido taxii fue: $content");
+%       		my $decoded = decode_json($content);
+
+%			my $ua = LWP::UserAgent->new;
+% 			my $url = "http://172.16.59.219:8080/REST/1.0/ticket/" . $item->{'rtir_id'} . "/show/";
+% 			my $req = POST($url, [query => "Owner='root'", user => 'root', pass=> 'password', 'Content_Type' => 'form-data' ]);
+% 			my @final_array = ();
+% 			my $resp = $ua->request($req);
+% 			if ($resp->is_success) {
+% 				RT::Logger->error("Success");
+%				my $message = $resp->decoded_content;
+%				my @data = split('\n', $message);
+%				my @select = split(': ', $data[6]);
+
+
+	<tr>
+		<td align="center"><% $item->{'rtir_id'} %></td>
+		<td align="center"><% $select[1] %></td>
+		<td align="center"><% $decoded->{'id'} %></td>
+		<td align="center"><% $decoded->{'title'} %></a></td>
+	</tr>	
+%			}
+%		}
+%               $i = $i + 1;
+%	}
+%}		
+
+</table>
+
+</html>
+<%INIT>
+use LWP::UserAgent;
+
+use RT::Tickets;
+use LWP::UserAgent;
+use HTTP::Request::Common qw{ POST };
+use JSON qw (decode_json);
+my $title = loc("Listado de Asociaciones de Content Blocks y Tickets");
+
+</%INIT>

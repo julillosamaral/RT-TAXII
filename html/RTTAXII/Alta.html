@@ -18,28 +18,29 @@
 <form method="post" action="Alta.html">
 <table width="100%" cellpadding="0" cellspacing="0">
 <tr width="50%">
-<td rowspan="2"><span class="label"><&|/l&>Titulo</&>:<br /></span><input name="content_title"></input></td>
-<td rowspan="2"><span class="label"><&|/l&>Descripcion</&>:<br /></span><textarea name="description" rows="5" cols="60"></textarea></td>
-<td rowspan="2"><span class="label"><&|/l&>Tipo de contenido</&>:<br /></span>
-	<select name="content_binding" rows="5" cols="60">
-		<option value selected="selected">(no value)</option>
-
-% if ($resp_bind1->is_success){
-%        my $list_content1 = $resp_bind1->decoded_content;
-%        RT->Logger->info("La respuesta fue: $list_content1");
-%        my $decoded1 = decode_json($list_content1);
-%        my @bind_content1 = @{ $decoded1->{'results'} };
-%        RT->Logger->info("El contenido es: $decoded1");
-%        RT->Logger->info("@bind_content1");
-%		foreach my $f ( @bind_content1 ) {
-		<option value="<% $f->{'id'} %>"><% $f->{'title'} %></option>
-%		}
-%	}		
-	</select>
-</td>
+	<td>
+		<span class="label"><&|/l&>Titulo</&>:<br /></span>
+	</td>
+	<td>
+		<input name="content_title"></input>
+	</td>
 </tr>
-<tr width="50%">
-<td rowspan="2"><span class="label"><&|/l&>STIX Message</&>:<br /></span><textarea name="content" rows="5" cols="60"></textarea></td></tr>
+<tr>
+	<td>
+		<span class="label"><&|/l&>Descripcion</&>:<br /></span>
+	</td>
+	<td>
+		<textarea name="description" rows="5" cols="60"></textarea>
+	</td>
+</tr>
+<tr>
+	<td>
+		<span class="label"><&|/l&>Cyber Observable</&>:<br /></span>
+	</td>
+	<td>
+		<textarea name="content" rows="5" cols="60"></textarea>
+	</td>
+</tr>
 </table>
 <& /Elements/Submit, Label => loc('Record all updates') ,  Reset => 1, ResetLabel => loc('Clear')&>
 </form>
@@ -57,7 +58,7 @@ my $title = loc("Alta de Informacion");
 my $server_address = RT->Config->Get('server_address');
 my $port = RT->Config->Get('port');
 my $authorization = RT->Config->Get('authorization');	
-if ((my $content = $ARGS{'content'}) && (my $content_binding = $ARGS{'content_binding'}))   {
+if (my $content = $ARGS{'content'})   {
 	RT->Logger->info('Make call to TAXII web services');
 	my $ua = LWP::UserAgent->new;
 
@@ -71,7 +72,7 @@ if ((my $content = $ARGS{'content'}) && (my $content_binding = $ARGS{'content_bi
 	my $content_title = $ARGS{'content_title'};
 	my $ticket_id = 25;
 
-	my $req = POST($server, ['username' => $user, 'title' => $content_title, 'description' => $description, 'content_binding' => $content_binding, 'content' => $content, 'rt_id' => $ticket_id ]);
+	my $req = POST($server, ['username' => $user, 'title' => $content_title, 'description' => $description, 'content' => $content, 'rt_id' => $ticket_id ]);
 	$req->header('Authorization' => $authorization);
 	
 	my $resp = $ua->request($req);

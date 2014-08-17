@@ -72,6 +72,14 @@ Set the TAXII server address.
 Set( $authorization, 'Basic cm9vdDpwYXNzd29yZA==');
 
 
+=item C<$contentBlock_path>
+
+Set the TAXII server address.
+
+=cut
+
+Set( $contentBlock_path, '/contentBlock/');
+
 =item C<$cbinding_path>
 
 Set the TAXII server address.
@@ -79,6 +87,7 @@ Set the TAXII server address.
 =cut
 
 Set( $cbinding_path, '/contentBindingId/');
+
 
 =item C<$remoteDataFeed_path>
 
@@ -132,6 +141,14 @@ Set the TAXII server address.
 Set( $get_remote_data_feeds_path, '/rest_services/obtener_data_feeds/');
 
 
+=item C<$remote_data_feeds_path>
+
+Set the TAXII server address.
+
+=cut
+
+Set( $remote_data_feeds_path, '/remoteDataFeed/');
+
 =item C<$subscribe_to_data_feed_path>
 
 Set the TAXII server address.
@@ -159,6 +176,14 @@ Set the TAXII server address.
 Set( $content_binding_path, '/contentBindingId/');
 
 
+=item C<$cbRT_path>
+
+Set the TAXII server address.
+
+=cut
+
+Set( $cbRT_path, '/contentBlockRTIR/');
+
 =item C<$message_binding_path>
 
 Set the TAXII server address.
@@ -175,5 +200,13 @@ Set the TAXII server address.
 =cut
 
 Set( $obtener_df_path, '/rest_services/registrar_remote_data_feeds/');
+
+=item C<$obtener_df_ctt_block_path>
+
+Set the TAXII server address.
+
+=cut
+
+Set( $obtener_df_ctt_block, '/rest_services/data_feed_content_block/');
 
 1;

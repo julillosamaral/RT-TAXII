@@ -1,0 +1,49 @@
+%
+% my $server_address1 = RT->Config->Get('server_address');
+% my $port1 = RT->Config->Get('port');
+% my $bind_service1 = RT->Config->Get('remote_data_feeds_path');
+% my $binding_server1 = $server_address1 . ":" . $port1 . $bind_service1;
+% RT->Logger->info("Los datos con los que va a hacer la conexion son: $binding_server1");
+% my $authorization1 = RT->Config->Get('authorization');
+
+% my $bind_browser1 = LWP::UserAgent->new;
+% my $req_bind1 = HTTP::Request->new(GET => $binding_server1);
+% $req_bind1->header('Authorization' => $authorization1);
+
+% my $resp_bind1 = $bind_browser1->request($req_bind1);
+
+<& /Elements/Header, Title => $title &>
+<& /Elements/Tabs &>
+
+<table width="60%">
+	<tr>
+		<th>Name</th>
+		<th>Description</th>
+		<th>Producer</th>
+	</tr>
+
+% if ($resp_bind1->is_success){
+%        my $list_content1 = $resp_bind1->decoded_content;
+%        RT->Logger->info("La respuesta fue: $list_content1");
+%        my $decoded1 = decode_json($list_content1);
+%	 my @bind_content1 = @{ $decoded1->{'results'}};
+% 	 foreach my $item ( @bind_content1 ) {
+%		my $content = $item->{'content'};
+	<tr>
+		<td align="center"><% $item->{'name'} %></td>
+		<td align="center"><% $item->{'description'} %></td>
+		<td align="center"><% $item->{'producer'} %></td>
+	</tr>	
+%	}
+%}		
+
+
+</table>
+
+</html>
+<%INIT>
+use LWP::UserAgent;
+use HTTP::Request::Common qw{ POST };
+use JSON qw (decode_json);
+my $title = loc("Listado de Informacion");
+</%INIT>
