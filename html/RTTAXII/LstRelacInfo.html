@@ -15,7 +15,7 @@
 <& /Elements/Header, Title => $title &>
 <& /Elements/Tabs &>
 
-<table>
+<table width="80%" class="table">
 	<tr>
 
 		<th>Id Ticket</th>
@@ -77,6 +77,6 @@ use RT::Tickets;
 use LWP::UserAgent;
 use HTTP::Request::Common qw{ POST };
 use JSON qw (decode_json);
-my $title = loc("Listado de Asociaciones de Content Blocks y Tickets");
+my $title = loc("List Associated Content Blocks and Tickets");
 
 </%INIT>

@@ -87,7 +87,9 @@
 
 </tr>
 </table>
+<div class="botones_taxii">
 <& /Elements/Submit, Label => loc('Record all updates') ,  Reset => 1, ResetLabel => loc('Clear')&>
+</div>
 </form>
 </html>
 % }
@@ -96,7 +98,7 @@ use LWP::UserAgent;
 use HTTP::Request::Common qw{ POST };
 use JSON qw (decode_json);
 
-my $title = loc("Subscripcion a Data Feeds");
+my $title = loc("Subscription to Data Feed");
 
 my $server_address = RT->Config->Get('server_address');
 my $port = RT->Config->Get('port');

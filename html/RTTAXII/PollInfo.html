@@ -19,7 +19,7 @@
 <table width="100%" cellpadding="0" cellspacing="0">
 <tr width="50%">
 	<td>
-		<span class="label"><&|/l&>Data Feed y subscripcion</&>:<br /></span>
+		<span class="label"><&|/l&>Data Feed and subscription</&>:<br /></span>
 	</td>
 	<td>	
 		<select name="poll_information" rows="5" cols="60">
@@ -40,7 +40,9 @@
 	</td>
 </tr>
 </table>
+<div class="botones_taxii">
 <& /Elements/Submit, Label => loc('Record all updates') ,  Reset => 1, ResetLabel => loc('Clear')&>
+</div>
 </form>
 </html>
 <%INIT>
@@ -51,7 +53,7 @@ my $user = $session{'CurrentUser'}->Name;
 
 RT->Logger->info($user); 
 
-my $title = loc("Poll de Informacion");
+my $title = loc("Information Polling");
 
 my $server_address = RT->Config->Get('server_address');
 my $port = RT->Config->Get('port');

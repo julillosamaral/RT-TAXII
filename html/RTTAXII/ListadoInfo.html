@@ -14,11 +14,8 @@
 
 <& /Elements/Header, Title => $title &>
 <& /Elements/Tabs &>
-<div>
-test
-</div>
 
-<table width="60%">
+<table width="80%" class="table">
 	<tr>
 		<th>Title</th>
 		<th>Description</th>
@@ -65,6 +62,6 @@ test
 use LWP::UserAgent;
 use HTTP::Request::Common qw{ POST };
 use JSON qw (decode_json);
-my $title = loc("Listado de Informacion");
+my $title = loc("List Information");
 
 </%INIT>

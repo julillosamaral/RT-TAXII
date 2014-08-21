@@ -15,7 +15,7 @@
 <& /Elements/Header, Title => $title &>
 <& /Elements/Tabs &>
 
-<table width="60%">
+<table width="80%" class="table">
 	<tr>
 		<th>Name</th>
 		<th>Description</th>
@@ -45,5 +45,5 @@
 use LWP::UserAgent;
 use HTTP::Request::Common qw{ POST };
 use JSON qw (decode_json);
-my $title = loc("Listado de Informacion");
+my $title = loc("List Information Remote Data Feeds");
 </%INIT>

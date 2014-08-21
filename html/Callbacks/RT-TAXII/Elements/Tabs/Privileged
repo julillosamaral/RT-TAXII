@@ -6,77 +6,77 @@
     );
     my $info = $taxii->child(
         'manejoInfo',
-        title => 'Informacion',
+        title => loc('Information'),
         path => 'RTTAXII/',
     );
     $info->child(
         'altaInformacion',
-        title => 'Alta de Informacion',
+        title => loc('Add Information'),
         path  => '/RTTAXII/Alta.html',
     );
     $info->child(
         'lstInformacion',
-        title => 'Listado de Informacion',
+        title => loc('List Information'),
         path  => '/RTTAXII/ListadoInfo.html',
     );
     $taxii->child(
         'suscrDataFeed',
-        title => 'Subscripcion a Data Feed',
+        title => loc('Subscription to Data Feed'),
         path  => '/RTTAXII/SubscDF.html',
     );
     $taxii->child(
         'envioInfo',
-        title => 'Envio de Informacion',
+        title => loc('Send Information'),
         path  => '/RTTAXII/EnvioInfo.html',
     );
     my $asc = $taxii->child(
         'asocInfo',
-        title => 'Asociaciones',
+        title => loc('Associate Information'),
         path => 'RTTAXII/',
     );
     $asc->child(
         'relInfo',
-        title => 'Relacionar Informacion',
+        title => loc('Relate Information'),
         path => '/RTTAXII/RelacInfo.html',
     );  
     $asc->child(
         'lstInfo',
-        title => 'Listado Relaciones Informacion',
+        title => loc('List Related Information'),
         path => '/RTTAXII/LstRelacInfo.html',
     );   
     $taxii->child( 
         'pollInfo',
-        title => 'Poll de Informacion',
+        title => loc('Poll Information'),
         path  => '/RTTAXII/PollInfo.html',
     );   
     my $reg = $taxii->child( 
         'ServTaxii',
-        title => 'Servicios TAXII',
+        title => loc('TAXII Services'),
         path  => '/RTTAXII/',
     );
     $reg->child(
         'regServTaxii',
-        'title' => 'Registro de Servicios TAXII',
+        'title' => loc('Register TAXII Services'),
         'path' => '/RTTAXII/RegServTaxii.html',
     );
     $reg->child(
         'lstServTaxii',
-        'title' => 'Listado de Servicios TAXII',
+        'title' => loc('List TAXII Services'),
         'path' => '/RTTAXII/LstServTaxii.html',
     );
     my $rdf = $taxii->child(
         'RemoteDf',
-        'title' => 'Data Feeds Remotos',
+        'title' => loc('Remote Data Feeds'),
         'path' => '/RTTAXII/',
     );
     $rdf->child( 
         'ObtRemotDG',
-        title => 'Obtener data feeds remotos',
+        title => loc('Get Remote Data Feeds'),
         path  => '/RTTAXII/ObtRemotDF.html',
     );
     $rdf->child( 
         'LstRemotDF',
-        title => 'Listar data feeds remotos',
+        title => loc('List Remote Data Feeds'),
         path  => '/RTTAXII/LstRemotDF.html',
     );   
     #Retrieve the 'actions' page menu item

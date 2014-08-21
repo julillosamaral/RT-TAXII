@@ -4,13 +4,13 @@
 <table width="100%" cellpadding="0" cellspacing="0">
 <tr width="50%">
 	<td>
-		<span class="label"><&|/l&>Nombre del servidor</&>:<br /></span>
+		<span class="label"><&|/l&>Server Name</&>:<br /></span>
 	</td>
 	<td>
 		<input name="name"></input>
 	</td>
 	<td>
-		<span class="label"><&|/l&>Descripcion</&>:<br /></span>
+		<span class="label"><&|/l&>Description</&>:<br /></span>
 	</td>
 		<textarea name="description" rows="5" cols="60"></textarea>
 	</td>
@@ -38,7 +38,9 @@
 	</td>
 </tr>
 </table>
+<div class="botones_taxii">
 <& /Elements/Submit, Label => loc('Record all updates') ,  Reset => 1, ResetLabel => loc('Clear')&>
+</div>
 </form>
 </html>
 <%INIT>
@@ -49,7 +51,7 @@ my $user = $session{'CurrentUser'}->Name;
 
 RT->Logger->info($user); 
 my $mensaje = "";
-my $title = loc("Registro de Servicios TAXII");
+my $title = loc("Register TAXII Services");
 
 my $server_address = RT->Config->Get('server_address');
 my $port = RT->Config->Get('port');

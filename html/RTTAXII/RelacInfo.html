@@ -19,7 +19,7 @@
 	<table>
 		<tr>
 			<td>
-				<span class="label"><&|/l&>Contenido en taxii</&>:<br /></span>
+				<span class="label"><&|/l&>TAXII Content</&>:<br /></span>
 			</td>
 			<td>
 	<select name="content_blocks" rows="5" cols="60">
@@ -48,7 +48,7 @@
 % my $resp = $ua->request($req);
 		<tr>
 			<td>
-	<span class="label"><&|/l&>Contenido en RTIR</&>:<br /></span>
+	<span class="label"><&|/l&>RTIR Content</&>:<br /></span>
 			</td>
 			<td>
 	<select name="ticket">
@@ -70,7 +70,9 @@
 	</select>
 		</td>
 	</table>
+<div class="botones_taxii">
 <& /Elements/Submit, Label => loc('Record all updates') ,  Reset => 1, ResetLabel => loc('Clear')&>
+</div>
 </form>		
 
 </html>
@@ -81,7 +83,7 @@ use RT::Tickets;
 use LWP::UserAgent;
 use HTTP::Request::Common qw{ POST };
 use JSON qw (decode_json);
-my $title = loc("Asociacion de Content Blocks y Tickets");
+my $title = loc("Associate Content Blocks to Tickets");
 
 my $server_address = RT->Config->Get('server_address');
 my $port = RT->Config->Get('port');
