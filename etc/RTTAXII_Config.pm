@@ -18,7 +18,7 @@ Set the TAXII server address.
 
 =cut
 
-Set( $server_address, 'http://172.16.59.219');
+Set( $server_address, 'http://172.16.59.218');
 
 =item C<$port>
 
