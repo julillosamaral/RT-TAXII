@@ -82,7 +82,6 @@ if (my $name = $ARGS{'name'}) {
 
 	my $req = POST($server, ['name' => $name, 'description' => $description, 'poll' => $poll_service, 'inbox' => $inbox_service, 'subscription' => $subscription_service, 'feed_managment' => $feed_managment_service ]);
 	$req->header('Authorization' => $authorization);
-
 	my $resp = $ua->request($req);
 	if ($resp->is_success) {
 		RT::Logger->error("Success");
