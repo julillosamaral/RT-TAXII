@@ -32,12 +32,6 @@
 </tr>
 <tr>
 	<td>
-		<span class="label"><&|/l&>Subscription Service URL</&>:<br /></span>
-	</td>
-	<td>
-		<input name="subscription_service"></input>
-	</td>
-	<td>
 		<span class="label"><&|/l&>Feed Managment Service URL</&>:<br /></span>
 	</td>
 	<td>	
@@ -78,7 +72,8 @@ if (my $name = $ARGS{'name'}) {
 	my $poll_service = $ARGS{'poll_service'};
 	my $inbox_service = $ARGS{'inbox_service'};
 	my $feed_managment_service = $ARGS{'feed_managment_service'};
-	my $subscription_service = $ARGS{'subscription_service'};
+	my $subscription_service = $ARGS{'feed_managment_service'};
+	my $subscription_service ~= s/"feedManagment"/"subscriptionService"/g;
 
 	my $req = POST($server, ['name' => $name, 'description' => $description, 'poll' => $poll_service, 'inbox' => $inbox_service, 'subscription' => $subscription_service, 'feed_managment' => $feed_managment_service ]);
 	$req->header('Authorization' => $authorization);
